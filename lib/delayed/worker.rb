@@ -11,6 +11,7 @@ module Delayed
 
     def initialize(options={})
       @quiet = options[:quiet]
+      @sleep = options[:sleep]
       Delayed::Job.min_priority = options[:min_priority] if options.has_key?(:min_priority)
       Delayed::Job.max_priority = options[:max_priority] if options.has_key?(:max_priority)
     end
@@ -33,7 +34,7 @@ module Delayed
         break if $exit
 
         if count.zero?
-          sleep(SLEEP)
+          sleep(@sleep || SLEEP)
         else
           say "#{count} jobs processed at %.4f j/s, %d failed ..." % [count / realtime, result.last]
         end
